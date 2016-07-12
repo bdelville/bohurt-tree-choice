@@ -2,7 +2,7 @@
 var first = true;
 var circleSize = 10;
 var csInfo;
-
+var nodeMinSize;
 
 // ************** Generate the tree diagram	 *****************
 
@@ -20,9 +20,11 @@ function sizeChanged() {
 }
 
 function init() {
-  margin = { top: 20, right: 120, bottom: 20, left: 120 },
+  margin = { top: 20, right: 120, bottom: 20, left: 20 },
     width = csInfo.width - margin.right - margin.left,
     height = 1000 - margin.top - margin.bottom;
+    
+    nodeMinSize = csInfo.width / 9;
 
   tree = d3.layout.tree().size([width, height]);
 
@@ -70,29 +72,22 @@ function update(source) {
     .attr("r", 1e-6)
     .style("fill", function (d) { return d._children ? "lightsteelblue" : "#fff"; });
 
-  nodeEnter.append("text")
+  /*nodeEnter.append("text")
     .attr("x", 0)
     .attr("dy", circleSize * 3)
     .attr("text-anchor", function (d) { return "middle"; })
     .text(function (d) { return d.text; })
-    .style("fill-opacity", 1e-6);
-
-  //d.children, d._children
-
-  //Add specific to Node (Video): .filter(function(d, i) { return d.siteUrl; })
-  /*nodeEnter.filter(function(d, i) { return d.siteUrl; }).append('foreignObject')
-          .attr('class', function (d) { return 'object-' + d.id; })
-          //.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
-          .attr("width", 400)
-          .attr("height", 200)      
-          .append("iframe")
-              .attr("src", function(d) {
-                  return d.siteUrl;  //src for each frame
-              })
-              .attr("width", 400)
-              .attr("height", 200);*/
-
-
+    .style("fill-opacity", 1e-6);*/
+    
+    nodeEnter.append("foreignObject")
+    .attr("width", nodeMinSize)
+    .attr("height", 45)
+    .attr("x", -nodeMinSize/2)
+    .attr("y", circleSize + 5)
+    .style("fill-opacity", 1e-6)
+    .append("xhtml:body")
+    .style("font", "15px 'Helvetica Neue'")
+    .html(function (d) { return "<p>" + d.text + "</p>"; });
 
   // Transition nodes to their new position.
   var nodeUpdate = node.transition()
@@ -103,7 +98,10 @@ function update(source) {
     .attr("r", circleSize)
     .style("fill", function (d) { return d._children ? "lightsteelblue" : "#fff"; });
 
-  nodeUpdate.select("text")
+  /*nodeUpdate.select("text")
+    .style("fill-opacity", 1);*/
+    
+    nodeUpdate.select("foreignObject")
     .style("fill-opacity", 1);
 
   // Transition exiting nodes to the parent's new position.
@@ -115,7 +113,9 @@ function update(source) {
   nodeExit.select("circle")
     .attr("r", 1e-6);
 
-  nodeExit.select("text")
+  /*nodeExit.select("text")
+    .style("fill-opacity", 1e-6);*/
+    nodeExit.select("foreignObject")
     .style("fill-opacity", 1e-6);
 
   // Update the links…

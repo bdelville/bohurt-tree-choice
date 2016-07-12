@@ -30,6 +30,11 @@ h1.center {
     width: 12em
 }
 
+.node p {
+	font: 14px sans-serif;
+	text-align: center;
+}
+
 #mainContainer {
 	background-image: url("bg_bohurt.jpeg");
 	background-size:100%;
